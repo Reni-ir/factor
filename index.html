@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- Persian Date + Datepicker -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/persian-date@1.1.0/dist/persian-date.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
+
+
+<title>فاکتور خدمات و قطعات</title>
+<style>
+  :root{--b:#1f2937;--g:#f3f4f6;--line:#e5e7eb;--pri:#2563eb}
+  *{box-sizing:border-box}
+  body{font-family: "Vazirmatn";background:#fff;margin:0;color:#111; font-feature-settings: "ss01" 1;font-variant-numeric: normal;}
+  .container{max-width:1100px;margin:24px auto;padding:16px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.06);overflow:hidden}
+  header{display:grid;grid-template-columns:1fr auto;gap:12px;padding:16px;border-bottom:1px dashed var(--line)}
+  h1{font-size:18px;margin:0;color:var(--b)}
+  .meta, .customer{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+  .row{display:contents}
+  label{font-size:15px;color:#555;display: flex;align-items: center;}
+  input,select{font-family: "Vazirmatn";width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:#fff}
+  input[type="date"]{direction:ltr}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+  button{font-family: "Vazirmatn";border:1px solid var(--line);background:#fff;border-radius:12px;padding:8px 12px;cursor:pointer}
+  .btn-primary{background:var(--pri);border-color:var(--pri);color:#fff}
+  .btn-danger{color:#b91c1c;border-color:#fecaca;background:#fff}
+  table{width:100%;border-collapse:collapse}
+  thead th{position:sticky;top:0;background:#fafafa;border-bottom:1px solid var(--line);font-weight:600}
+  th,td{font-family: "Vazirmatn";border-bottom:1px solid var(--line);padding:10px;text-align:center}
+  tbody td input{font-family: "Vazirmatn";width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:10px}
+  tbody tr:hover{background:#f9fafb}
+  tfoot td{font-weight:700;background:#fafafa}
+  
+  /* .center{display:flex;align-items:center;justify-content:center} */
+  .checkbox{transform:scale(1.1)}
+  .muted{color:#6b7280;font-size:15px}
+  .footer{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-top:1px dashed var(--line)}
+  @media print{
+    .actions,.footer .print-hint{display:none}
+    body{background:#fff}
+    .card{box-shadow:none;border:none}
+    input{border:0}
+    thead th{position:static}
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <header>
+        <div>
+          <h1> تعمیرگاه مجاز و خدمات پس از فروش موتور سیکلت مرادیان </h1>
+          <div class="muted">آدرس: کرج ، جاده ملارد ، خیابان اهری ، نبش نسترن 58 ، روبرو ستاد فرماندهی </div>
+        </div>
+        <div style="text-align:left">
+          <div class="muted">شماره تماس پذیرش: 09363611918  </div>
+          <div class="muted" style="display: flex; align-items: center;justify-content: space-between;">
+            <div style="display: flex; border: 2px solid black; border-radius: 8px;padding: 10px;font-weight: 800;">2601</div>
+            <div>نیکــران موتور 
+            <br>
+            بنلی - کی وی</div>
+            
+          </div>
+        </div>
+      </header>
+
+      <!-- اطلاعات فاکتور -->
+      <div style="padding:14px 16px">
+        <div class="meta">
+          <div class="row">
+            <label>تاریخ</label>
+            <input id="invDate" type="text" class="pdate">
+          </div>
+          <div class="row">
+            <label>شماره فاکتور</label>
+            <input id="invNumber" type="text" placeholder="مثلاً 2601">
+          </div>
+          <div class="row">
+            <label>نام و نام خانوادگی مشتری</label>
+            <input id="customerName" type="text" placeholder="نام مشتری">
+          </div>
+          <div class="row">
+            <label>شماره تماس مشتری</label>
+            <input id="customerPhone" type="tel" placeholder="09xxxxxxxxx">
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="addRow" class="btn-primary">+ افزودن سطر</button>
+          <button id="removeRows" class="btn-danger">🗑 حذف سطرهای انتخاب‌شده</button>
+          <span class="muted print-hint">برای چاپ: Ctrl/Cmd + P</span>
+        </div>
+
+        <div style="overflow:auto; border:1px solid var(--line); border-radius:12px">
+          <table id="invoiceTable">
+            <thead>
+              <tr>
+                <th style="width:48px">انتخاب</th>
+                <th style="width:64px">ردیف</th>
+                <th>کد کالا</th>
+                <th>نام کالا</th>
+                <th style="width:110px">تعداد</th>
+                <th style="width:160px">قیمت واحد (ریال)</th>
+                <th style="width:180px">مبلغ کل (ریال)</th>
+              </tr>
+            </thead>
+            <tbody id="tbody">
+              <!-- سطرهای پویا اینجا می‌آیند -->
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="6" style="text-align:left;padding-left:16px">جمع کل</td>
+                <td><span id="grandTotal">0</span></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="muted">امضا مشتری: ....................................</div>
+        <div class="muted">امضا مسئول: ....................................</div>
+      </div>
+    </div>
+  </div>
+  <script>const nf = new Intl.NumberFormat('en-US');
+const tbody = document.getElementById('tbody');
+const grandTotalEl = document.getElementById('grandTotal');
+
+// پاک‌سازی عدد از هر کاراکتر غیررقمی
+function parseNum(str='') {
+  return Number(String(str).replace(/[, ]/g, '')) || 0;
+}
+
+// فرمت عدد سه‌تایی با کاما
+function formatNum(num) {
+  return num ? nf.format(num) : '';
+}
+
+function newRow(values = {}) {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td class="center"><input class="checkbox" type="checkbox"></td>
+    <td class="rowIndex">1</td>
+    <td><input type="text" class="code" placeholder="کد"></td>
+    <td><input type="text" class="title" placeholder="نام کالا/خدمت"></td>
+    <td><input type="number" min="0" step="1" class="qty" value="${values.qty ?? 1}"></td>
+    <td><input type="text" inputmode="numeric" class="price" value="${formatNum(values.price ?? 0)}"></td>
+    <td><input type="text" class="lineTotal" value="" readonly></td>
+  `;
+
+  const qtyInput = tr.querySelector('.qty');
+  const priceInput = tr.querySelector('.price');
+
+  // فرمت زنده برای فیلد قیمت
+  priceInput.addEventListener('input', (e) => {
+    const cursorPos = e.target.selectionStart;
+    const clean = parseNum(e.target.value);
+    e.target.value = formatNum(clean);
+    updateRow(tr);
+  });
+
+  qtyInput.addEventListener('input', () => updateRow(tr));
+
+  tbody.appendChild(tr);
+  refreshRowIndices();
+  updateRow(tr);
+}
+
+function updateRow(tr){
+  const qty   = parseNum(tr.querySelector('.qty').value);
+  const price = parseNum(tr.querySelector('.price').value);
+  const total = qty * price;
+  tr.querySelector('.lineTotal').value = formatNum(total);
+  updateGrandTotal();
+}
+
+function updateGrandTotal(){
+  let sum = 0;
+  [...tbody.querySelectorAll('.lineTotal')].forEach(inp=>{
+    sum += parseNum(inp.value);
+  });
+  grandTotalEl.textContent = formatNum(sum);
+}
+
+function refreshRowIndices(){
+  [...tbody.querySelectorAll('.rowIndex')].forEach((td,i)=>td.textContent = i+1);
+}
+
+document.getElementById('addRow').addEventListener('click', ()=> newRow());
+document.getElementById('removeRows').addEventListener('click', ()=>{
+  const selected = [...tbody.querySelectorAll('input[type="checkbox"]:checked')];
+  if(!selected.length){ alert('هیچ سطری انتخاب نشده است.'); return; }
+  selected.forEach(cb => cb.closest('tr').remove());
+  refreshRowIndices();
+  updateGrandTotal();
+});
+
+// مقدار اولیه
+(function setToday(){
+  const d = new Date();
+  document.getElementById('invDate').value = d.toISOString().slice(0,10);
+})();
+newRow({qty:1, price:0});
+
+// فعال‌سازی تقویم شمسی روی فیلد تاریخ
+$(document).ready(function() {
+  $("#invDate").persianDatepicker({
+    format: "YYYY/MM/DD",
+    autoClose: true,
+    initialValue: true,
+    calendar: {
+      persian: {
+        locale: 'fa',
+        leapYearMode: "algorithmic"
+      }
+    }
+  });
+});
+
+
+</script>
+
+
+</body>
+</html>
