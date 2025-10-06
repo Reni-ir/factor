@@ -10,33 +10,30 @@
 <script src="https://cdn.jsdelivr.net/npm/persian-date@1.1.0/dist/persian-date.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
 
-
 <title>فاکتور خدمات و قطعات</title>
 <style>
   :root{--b:#1f2937;--g:#f3f4f6;--line:#e5e7eb;--pri:#2563eb}
   *{box-sizing:border-box}
-  body{font-family: "Vazirmatn";background:#fff;margin:0;color:#111; font-feature-settings: "ss01" 1;font-variant-numeric: normal;}
+  body{font-family:"Vazirmatn";background:#fff;margin:0;color:#111;font-feature-settings:"ss01" 1;font-variant-numeric:normal;}
   .container{max-width:1100px;margin:24px auto;padding:16px}
   .card{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.06);overflow:hidden}
   header{display:grid;grid-template-columns:1fr auto;gap:12px;padding:16px;border-bottom:1px dashed var(--line)}
   h1{font-size:18px;margin:0;color:var(--b)}
-  .meta, .customer{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+  .meta,.customer{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
   .row{display:contents}
-  label{font-size:15px;color:#555;display: flex;align-items: center;}
-  input,select{font-family: "Vazirmatn";width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:#fff}
+  label{font-size:15px;color:#555;display:flex;align-items:center;}
+  input,select{font-family:"Vazirmatn";width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:#fff}
   input[type="date"]{direction:ltr}
   .actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
-  button{font-family: "Vazirmatn";border:1px solid var(--line);background:#fff;border-radius:12px;padding:8px 12px;cursor:pointer}
+  button{font-family:"Vazirmatn";border:1px solid var(--line);background:#fff;border-radius:12px;padding:8px 12px;cursor:pointer}
   .btn-primary{background:var(--pri);border-color:var(--pri);color:#fff}
   .btn-danger{color:#b91c1c;border-color:#fecaca;background:#fff}
   table{width:100%;border-collapse:collapse}
   thead th{position:sticky;top:0;background:#fafafa;border-bottom:1px solid var(--line);font-weight:600}
-  th,td{font-family: "Vazirmatn";border-bottom:1px solid var(--line);padding:10px;text-align:center}
-  tbody td input{font-family: "Vazirmatn";width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:10px}
+  th,td{font-family:"Vazirmatn";border-bottom:1px solid var(--line);padding:10px;text-align:center}
+  tbody td input{font-family:"Vazirmatn";width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:10px}
   tbody tr:hover{background:#f9fafb}
   tfoot td{font-weight:700;background:#fafafa}
-  
-  /* .center{display:flex;align-items:center;justify-content:center} */
   .checkbox{transform:scale(1.1)}
   .muted{color:#6b7280;font-size:15px}
   .footer{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-top:1px dashed var(--line)}
@@ -58,13 +55,10 @@
           <div class="muted">آدرس: کرج ، جاده ملارد ، خیابان اهری ، نبش نسترن 58 ، روبرو ستاد فرماندهی </div>
         </div>
         <div style="text-align:left">
-          <div class="muted">شماره تماس پذیرش: 09363611918  </div>
-          <div class="muted" style="display: flex; align-items: center;justify-content: space-between;">
-            <div style="display: flex; border: 2px solid black; border-radius: 8px;padding: 10px;font-weight: 800;">2601</div>
-            <div>نیکــران موتور 
-            <br>
-            بنلی - کی وی</div>
-            
+          <div class="muted">شماره تماس پذیرش: 09363611918</div>
+          <div class="muted" style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="display:flex;border:2px solid black;border-radius:8px;padding:10px;font-weight:800;">2601</div>
+            <div>نیکــران موتور <br> بنلی - کی وی</div>
           </div>
         </div>
       </header>
@@ -93,10 +87,24 @@
         <div class="actions">
           <button id="addRow" class="btn-primary">+ افزودن سطر</button>
           <button id="removeRows" class="btn-danger">🗑 حذف سطرهای انتخاب‌شده</button>
+          <!-- ✅ دکمه‌های ذخیره‌سازی -->
+          <button id="saveInvoice">💾 ذخیره فاکتور</button>
+          <button id="toggleManager">📂 فاکتورهای ذخیره‌شده</button>
           <span class="muted print-hint">برای چاپ: Ctrl/Cmd + P</span>
         </div>
 
-        <div style="overflow:auto; border:1px solid var(--line); border-radius:12px">
+        <!-- ✅ پنل مدیریت ساده -->
+        <div id="manager" style="display:none; border:1px solid var(--line); border-radius:12px; padding:12px; margin-top:10px">
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap">
+            <strong>فاکتورهای ذخیره‌شده:</strong>
+            <select id="savedList" style="min-width:320px; padding:8px 10px; border:1px solid var(--line); border-radius:10px"></select>
+            <button id="loadSelected">بارگذاری</button>
+            <button id="deleteSelected" class="btn-danger">حذف</button>
+          </div>
+          <div class="muted" style="margin-top:6px">* بر اساس «شماره فاکتور» اگر قبلاً ذخیره شده باشد، بروزرسانی می‌شود.</div>
+        </div>
+
+        <div style="overflow:auto; border:1px solid var(--line); border-radius:12px; margin-top:10px">
           <table id="invoiceTable">
             <thead>
               <tr>
@@ -109,9 +117,7 @@
                 <th style="width:180px">مبلغ کل (ریال)</th>
               </tr>
             </thead>
-            <tbody id="tbody">
-              <!-- سطرهای پویا اینجا می‌آیند -->
-            </tbody>
+            <tbody id="tbody"></tbody>
             <tfoot>
               <tr>
                 <td colspan="6" style="text-align:left;padding-left:16px">جمع کل</td>
@@ -128,19 +134,15 @@
       </div>
     </div>
   </div>
-  <script>const nf = new Intl.NumberFormat('en-US');
+
+<script>
+/* ===== محاسبات و سطرها ===== */
+const nf = new Intl.NumberFormat('en-US');
 const tbody = document.getElementById('tbody');
 const grandTotalEl = document.getElementById('grandTotal');
 
-// پاک‌سازی عدد از هر کاراکتر غیررقمی
-function parseNum(str='') {
-  return Number(String(str).replace(/[, ]/g, '')) || 0;
-}
-
-// فرمت عدد سه‌تایی با کاما
-function formatNum(num) {
-  return num ? nf.format(num) : '';
-}
+function parseNum(str=''){ return Number(String(str).replace(/[, ]/g,'')) || 0; }
+function formatNum(n){ return n ? nf.format(n) : ''; }
 
 function newRow(values = {}) {
   const tr = document.createElement('tr');
@@ -153,18 +155,14 @@ function newRow(values = {}) {
     <td><input type="text" inputmode="numeric" class="price" value="${formatNum(values.price ?? 0)}"></td>
     <td><input type="text" class="lineTotal" value="" readonly></td>
   `;
-
   const qtyInput = tr.querySelector('.qty');
   const priceInput = tr.querySelector('.price');
 
-  // فرمت زنده برای فیلد قیمت
   priceInput.addEventListener('input', (e) => {
-    const cursorPos = e.target.selectionStart;
     const clean = parseNum(e.target.value);
     e.target.value = formatNum(clean);
     updateRow(tr);
   });
-
   qtyInput.addEventListener('input', () => updateRow(tr));
 
   tbody.appendChild(tr);
@@ -179,17 +177,13 @@ function updateRow(tr){
   tr.querySelector('.lineTotal').value = formatNum(total);
   updateGrandTotal();
 }
-
 function updateGrandTotal(){
   let sum = 0;
-  [...tbody.querySelectorAll('.lineTotal')].forEach(inp=>{
-    sum += parseNum(inp.value);
-  });
+  [...tbody.querySelectorAll('.lineTotal')].forEach(inp=> sum += parseNum(inp.value));
   grandTotalEl.textContent = formatNum(sum);
 }
-
 function refreshRowIndices(){
-  [...tbody.querySelectorAll('.rowIndex')].forEach((td,i)=>td.textContent = i+1);
+  [...tbody.querySelectorAll('.rowIndex')].forEach((td,i)=> td.textContent = i+1);
 }
 
 document.getElementById('addRow').addEventListener('click', ()=> newRow());
@@ -201,31 +195,123 @@ document.getElementById('removeRows').addEventListener('click', ()=>{
   updateGrandTotal();
 });
 
-// مقدار اولیه
+/* تاریخ پیش‌فرض و تقویم شمسی */
 (function setToday(){
   const d = new Date();
   document.getElementById('invDate').value = d.toISOString().slice(0,10);
 })();
-newRow({qty:1, price:0});
-
-// فعال‌سازی تقویم شمسی روی فیلد تاریخ
 $(document).ready(function() {
   $("#invDate").persianDatepicker({
     format: "YYYY/MM/DD",
     autoClose: true,
     initialValue: true,
-    calendar: {
-      persian: {
-        locale: 'fa',
-        leapYearMode: "algorithmic"
-      }
-    }
+    calendar: { persian: { locale:'fa', leapYearMode:"algorithmic" } }
   });
 });
+newRow({qty:1, price:0});
 
+/* ===== ✅ ذخیره‌سازی در LocalStorage ===== */
+const STORAGE_KEY = 'invoices_v1';
 
+function getAllInvoices(){
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch { return []; }
+}
+function setAllInvoices(list){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+}
+
+// ساخت آبجکت فاکتور از فرم
+function collectInvoiceData(){
+  const rows = [...tbody.querySelectorAll('tr')].map(tr => ({
+    code:  tr.querySelector('.code')?.value || '',
+    title: tr.querySelector('.title')?.value || '',
+    qty:   parseNum(tr.querySelector('.qty')?.value || '0'),
+    price: parseNum(tr.querySelector('.price')?.value || '0'),
+  }));
+  return {
+    id: (window.crypto?.randomUUID && crypto.randomUUID()) || String(Date.now()),
+    date: document.getElementById('invDate').value,
+    number: document.getElementById('invNumber').value.trim(),
+    customerName: document.getElementById('customerName').value.trim(),
+    customerPhone: document.getElementById('customerPhone').value.trim(),
+    rows
+  };
+}
+
+// پر کردن فرم از یک فاکتور
+function loadInvoiceData(inv){
+  document.getElementById('invDate').value = inv.date || '';
+  document.getElementById('invNumber').value = inv.number || '';
+  document.getElementById('customerName').value = inv.customerName || '';
+  document.getElementById('customerPhone').value = inv.customerPhone || '';
+
+  tbody.innerHTML = '';
+  inv.rows.forEach(r => {
+    newRow({ qty: r.qty, price: r.price });
+  });
+  // تزریق کد/نام کالا بعد از ساخت سطرها
+  [...tbody.querySelectorAll('tr')].forEach((tr,i)=>{
+    tr.querySelector('.code').value  = inv.rows[i]?.code  || '';
+    tr.querySelector('.title').value = inv.rows[i]?.title || '';
+    updateRow(tr);
+  });
+  updateGrandTotal();
+}
+
+// ذخیره یا بروزرسانی بر اساس شماره فاکتور
+function saveCurrentInvoice(){
+  const data = collectInvoiceData();
+  if(!data.number){
+    if(!confirm('شماره فاکتور خالی است. با شناسه داخلی ذخیره شود؟')) return;
+  }
+  const list = getAllInvoices();
+  const idx = data.number ? list.findIndex(x => x.number === data.number) : -1;
+  if(idx >= 0){
+    data.id = list[idx].id;     // حفظ شناسه قبلی
+    list[idx] = data;           // بروزرسانی
+  }else{
+    list.unshift(data);         // افزودن جدید
+  }
+  setAllInvoices(list);
+  alert('فاکتور ذخیره شد ✅');
+  refreshSavedList();
+}
+
+// لیست فاکتورها در سلکت
+const manager = document.getElementById('manager');
+const savedList = document.getElementById('savedList');
+
+function refreshSavedList(){
+  const list = getAllInvoices();
+  savedList.innerHTML = '';
+  list.forEach(inv => {
+    const title = `${inv.number || 'بدون شماره'} — ${inv.customerName || 'بدون نام'} — ${inv.date || ''}`;
+    const opt = new Option(title, inv.id);
+    savedList.add(opt);
+  });
+}
+
+// رویدادهای مدیریت
+document.getElementById('saveInvoice').addEventListener('click', saveCurrentInvoice);
+document.getElementById('toggleManager').addEventListener('click', ()=>{
+  manager.style.display = manager.style.display === 'none' ? 'block' : 'none';
+  refreshSavedList();
+});
+document.getElementById('loadSelected').addEventListener('click', ()=>{
+  const id = savedList.value;
+  const inv = getAllInvoices().find(x => x.id === id);
+  if(!inv) return alert('موردی انتخاب نشده');
+  loadInvoiceData(inv);
+});
+document.getElementById('deleteSelected').addEventListener('click', ()=>{
+  const id = savedList.value;
+  if(!id) return alert('موردی انتخاب نشده');
+  if(!confirm('این فاکتور حذف شود؟')) return;
+  const list = getAllInvoices().filter(x => x.id !== id);
+  setAllInvoices(list);
+  refreshSavedList();
+});
 </script>
-
-
 </body>
 </html>
