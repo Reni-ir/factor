@@ -14,29 +14,33 @@
 <style>
   :root{--b:#1f2937;--g:#f3f4f6;--line:#e5e7eb;--pri:#2563eb}
   *{box-sizing:border-box}
-  body{font-family:"Vazirmatn";background:#fff;margin:0;color:#111;font-feature-settings:"ss01" 1;font-variant-numeric:normal;}
-  .container{max-width:1100px;margin:24px auto;padding:16px}
+  body{font-family:"Vazirmatn";background:#fff;margin:0;padding:0;color:#111;font-feature-settings:"ss01" 1;font-variant-numeric:normal;}
+  .container{max-width:1100px;margin:0px auto;}
   .card{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.06);overflow:hidden}
-  header{display:grid;grid-template-columns:1fr auto;gap:12px;padding:16px;border-bottom:1px dashed var(--line)}
-  h1{font-size:18px;margin:0;color:var(--b)}
+  header{display:grid;grid-template-columns: repeat(3, 1fr);gap:12px;padding:16px;border-bottom:1px dashed var(--line)}
+  h1{font-size:18px;margin:0;color:var(--b);font-size: 14px;}
   .meta,.customer{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
   .row{display:contents}
-  label{font-size:15px;color:#555;display:flex;align-items:center;}
-  input,select{font-family:"Vazirmatn";width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:#fff}
+  label{font-size:14px;color:#555;display:flex;align-items:center;}
+  input,select{font-family:"Vazirmatn";width:100%;padding:4px 8px;border:1px solid var(--line);border-radius:10px;background:#fff}
   input[type="date"]{direction:ltr}
   .actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
   button{font-family:"Vazirmatn";border:1px solid var(--line);background:#fff;border-radius:12px;padding:8px 12px;cursor:pointer}
   .btn-primary{background:var(--pri);border-color:var(--pri);color:#fff}
   .btn-danger{color:#b91c1c;border-color:#fecaca;background:#fff}
   table{width:100%;border-collapse:collapse}
-  thead th{position:sticky;top:0;background:#fafafa;border-bottom:1px solid var(--line);font-weight:600}
-  th,td{font-family:"Vazirmatn";border-bottom:1px solid var(--line);padding:10px;text-align:center}
-  tbody td input{font-family:"Vazirmatn";width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:10px}
+  thead th{position:sticky;top:0;background:#2b2b2b;border-bottom:1px solid var(--line);font-weight:500;color: white;}
+  th,td{font-family:"Vazirmatn";border-bottom:1px solid var(--line);padding:5px 3px;text-align:center;font-size: 14px;color: black;}
+  tbody td input{font-family:"Vazirmatn";width:100%;padding:0px 4px;border:1px solid var(--line);border-radius:10px}
   tbody tr:hover{background:#f9fafb}
-  tfoot td{font-weight:700;background:#fafafa}
+  tfoot td{font-weight:700;background:#2b2b2b;color: white;}
   .checkbox{transform:scale(1.1)}
   .muted{color:#6b7280;font-size:15px}
   .footer{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-top:1px dashed var(--line)}
+  tbody tr.selected {
+  background: #dbeafe !important; /* آبی روشن */
+}
+
   @media print{
     .actions,.footer .print-hint{display:none}
     body{background:#fff}
@@ -50,30 +54,40 @@
   <div class="container">
     <div class="card">
       <header>
-        <div>
-          <h1> تعمیرگاه مجاز و خدمات پس از فروش موتور سیکلت مرادیان </h1>
-          <div class="muted">آدرس: کرج ، جاده ملارد ، خیابان اهری ، نبش نسترن 58 ، روبرو ستاد فرماندهی </div>
-        </div>
-        <div style="text-align:left">
+        <div style="text-align:right">
           <div class="muted">شماره تماس پذیرش: 09363611918</div>
           <div class="muted" style="display:flex;align-items:center;justify-content:space-between;">
-            <div style="display:flex;border:2px solid black;border-radius:8px;padding:10px;font-weight:800;">2601</div>
             <div>نیکــران موتور <br> بنلی - کی وی</div>
+            <div style="display:flex;border:2px solid black;border-radius:8px;padding:10px;font-weight:800;">2601</div>
+            
           </div>
         </div>
+        <div style="text-align: center;">
+          <h1 style="font-weight: 800;">
+            
+            تعمیرگاه مجاز و خدمات پس از فروش </br>موتور سیکلت مرادیان 
+          
+          </h1>
+          <div style="font-size: 10px;" class="muted">آدرس: کرج ، جاده ملارد ، خیابان اهری ، نبش نسترن 58 ، روبرو ستاد فرماندهی </div>
+        </div>
+        <div style="text-align:left;display: flex;flex-direction: column;align-items: stretch;gap: 10px;">
+           <div class="row" style="display: flex;">
+            <label style="flex: 2;">تاریخ</label>
+            <input style="flex: 4;"  id="invDate" type="text" class="pdate">
+          </div>
+          <div class="row" style="display: flex;">
+            <label style="flex: 2;">شماره فاکتور</label>
+            <input style="flex: 4;" id="invNumber" type="text" placeholder="مثلاً 2601">
+          </div>
+          </div>
+        </div>
+        
       </header>
 
       <!-- اطلاعات فاکتور -->
       <div style="padding:14px 16px">
         <div class="meta">
-          <div class="row">
-            <label>تاریخ</label>
-            <input id="invDate" type="text" class="pdate">
-          </div>
-          <div class="row">
-            <label>شماره فاکتور</label>
-            <input id="invNumber" type="text" placeholder="مثلاً 2601">
-          </div>
+         
           <div class="row">
             <label>نام و نام خانوادگی مشتری</label>
             <input id="customerName" type="text" placeholder="نام مشتری">
@@ -106,25 +120,25 @@
 
         <div style="overflow:auto; border:1px solid var(--line); border-radius:12px; margin-top:10px">
           <table id="invoiceTable">
-            <thead>
-              <tr>
-                <th style="width:48px">انتخاب</th>
-                <th style="width:64px">ردیف</th>
-                <th>کد کالا</th>
-                <th>نام کالا</th>
-                <th style="width:110px">تعداد</th>
-                <th style="width:160px">قیمت واحد (ریال)</th>
-                <th style="width:180px">مبلغ کل (ریال)</th>
-              </tr>
-            </thead>
-            <tbody id="tbody"></tbody>
-            <tfoot>
-              <tr>
-                <td colspan="6" style="text-align:left;padding-left:16px">جمع کل</td>
-                <td><span id="grandTotal">0</span></td>
-              </tr>
-            </tfoot>
-          </table>
+  <thead>
+    <tr>
+      <th style="width:64px">ردیف</th>
+      <th>کد کالا</th>
+      <th>نام کالا</th>
+      <th style="width:110px">تعداد</th>
+      <th style="width:160px">قیمت واحد (ریال)</th>
+      <th style="width:180px">مبلغ کل (ریال)</th>
+    </tr>
+  </thead>
+  <tbody id="tbody"></tbody>
+  <tfoot>
+    <tr>
+      <td colspan="5" style="text-align:left;padding-left:16px">جمع کل</td>
+      <td><span id="grandTotal">0</span></td>
+    </tr>
+  </tfoot>
+</table>
+
         </div>
       </div>
 
@@ -141,13 +155,16 @@ const nf = new Intl.NumberFormat('en-US');
 const tbody = document.getElementById('tbody');
 const grandTotalEl = document.getElementById('grandTotal');
 
-function parseNum(str=''){ return Number(String(str).replace(/[, ]/g,'')) || 0; }
-function formatNum(n){ return n ? nf.format(n) : ''; }
+function parseNum(str = '') {
+  return Number(String(str).replace(/[, ]/g, '')) || 0;
+}
+function formatNum(n) {
+  return n ? nf.format(n) : '';
+}
 
 function newRow(values = {}) {
   const tr = document.createElement('tr');
   tr.innerHTML = `
-    <td class="center"><input class="checkbox" type="checkbox"></td>
     <td class="rowIndex">1</td>
     <td><input type="text" class="code" placeholder="کد"></td>
     <td><input type="text" class="title" placeholder="نام کالا/خدمت"></td>
@@ -155,6 +172,7 @@ function newRow(values = {}) {
     <td><input type="text" inputmode="numeric" class="price" value="${formatNum(values.price ?? 0)}"></td>
     <td><input type="text" class="lineTotal" value="" readonly></td>
   `;
+
   const qtyInput = tr.querySelector('.qty');
   const priceInput = tr.querySelector('.price');
 
@@ -165,68 +183,91 @@ function newRow(values = {}) {
   });
   qtyInput.addEventListener('input', () => updateRow(tr));
 
+  // ✅ کلیک برای انتخاب/غیرفعال‌سازی سطر
+  tr.addEventListener('click', () => {
+    tr.classList.toggle('selected');
+  });
+
   tbody.appendChild(tr);
   refreshRowIndices();
   updateRow(tr);
 }
 
-function updateRow(tr){
-  const qty   = parseNum(tr.querySelector('.qty').value);
+function updateRow(tr) {
+  const qty = parseNum(tr.querySelector('.qty').value);
   const price = parseNum(tr.querySelector('.price').value);
   const total = qty * price;
   tr.querySelector('.lineTotal').value = formatNum(total);
   updateGrandTotal();
 }
-function updateGrandTotal(){
+
+function updateGrandTotal() {
   let sum = 0;
-  [...tbody.querySelectorAll('.lineTotal')].forEach(inp=> sum += parseNum(inp.value));
+  [...tbody.querySelectorAll('.lineTotal')].forEach((inp) => (sum += parseNum(inp.value)));
   grandTotalEl.textContent = formatNum(sum);
 }
-function refreshRowIndices(){
-  [...tbody.querySelectorAll('.rowIndex')].forEach((td,i)=> td.textContent = i+1);
+
+function refreshRowIndices() {
+  [...tbody.querySelectorAll('.rowIndex')].forEach((td, i) => (td.textContent = i + 1));
 }
 
-document.getElementById('addRow').addEventListener('click', ()=> newRow());
-document.getElementById('removeRows').addEventListener('click', ()=>{
-  const selected = [...tbody.querySelectorAll('input[type="checkbox"]:checked')];
-  if(!selected.length){ alert('هیچ سطری انتخاب نشده است.'); return; }
-  selected.forEach(cb => cb.closest('tr').remove());
+document.getElementById('addRow').addEventListener('click', () => newRow());
+
+document.getElementById('removeRows').addEventListener('click', () => {
+  const selected = [...tbody.querySelectorAll('tr.selected')];
+  if (!selected.length) {
+    alert('هیچ سطری انتخاب نشده است.');
+    return;
+  }
+  selected.forEach((tr) => tr.remove());
   refreshRowIndices();
   updateGrandTotal();
 });
 
+/* ===== استایل برای سطر انتخاب‌شده ===== */
+const style = document.createElement('style');
+style.textContent = `
+  tbody tr.selected {
+    background: #dbeafe !important; /* آبی روشن */
+  }
+`;
+document.head.appendChild(style);
+
 /* تاریخ پیش‌فرض و تقویم شمسی */
-(function setToday(){
+(function setToday() {
   const d = new Date();
-  document.getElementById('invDate').value = d.toISOString().slice(0,10);
+  document.getElementById('invDate').value = d.toISOString().slice(0, 10);
 })();
-$(document).ready(function() {
-  $("#invDate").persianDatepicker({
-    format: "YYYY/MM/DD",
+$(document).ready(function () {
+  $('#invDate').persianDatepicker({
+    format: 'YYYY/MM/DD',
     autoClose: true,
     initialValue: true,
-    calendar: { persian: { locale:'fa', leapYearMode:"algorithmic" } }
+    calendar: { persian: { locale: 'fa', leapYearMode: 'algorithmic' } },
   });
 });
-newRow({qty:1, price:0});
+newRow({ qty: 1, price: 0 });
 
 /* ===== ✅ ذخیره‌سازی در LocalStorage ===== */
 const STORAGE_KEY = 'invoices_v1';
 
-function getAllInvoices(){
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-  catch { return []; }
+function getAllInvoices() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  } catch {
+    return [];
+  }
 }
-function setAllInvoices(list){
+function setAllInvoices(list) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
 }
 
 // ساخت آبجکت فاکتور از فرم
-function collectInvoiceData(){
-  const rows = [...tbody.querySelectorAll('tr')].map(tr => ({
-    code:  tr.querySelector('.code')?.value || '',
+function collectInvoiceData() {
+  const rows = [...tbody.querySelectorAll('tr')].map((tr) => ({
+    code: tr.querySelector('.code')?.value || '',
     title: tr.querySelector('.title')?.value || '',
-    qty:   parseNum(tr.querySelector('.qty')?.value || '0'),
+    qty: parseNum(tr.querySelector('.qty')?.value || '0'),
     price: parseNum(tr.querySelector('.price')?.value || '0'),
   }));
   return {
@@ -235,24 +276,23 @@ function collectInvoiceData(){
     number: document.getElementById('invNumber').value.trim(),
     customerName: document.getElementById('customerName').value.trim(),
     customerPhone: document.getElementById('customerPhone').value.trim(),
-    rows
+    rows,
   };
 }
 
 // پر کردن فرم از یک فاکتور
-function loadInvoiceData(inv){
+function loadInvoiceData(inv) {
   document.getElementById('invDate').value = inv.date || '';
   document.getElementById('invNumber').value = inv.number || '';
   document.getElementById('customerName').value = inv.customerName || '';
   document.getElementById('customerPhone').value = inv.customerPhone || '';
 
   tbody.innerHTML = '';
-  inv.rows.forEach(r => {
+  inv.rows.forEach((r) => {
     newRow({ qty: r.qty, price: r.price });
   });
-  // تزریق کد/نام کالا بعد از ساخت سطرها
-  [...tbody.querySelectorAll('tr')].forEach((tr,i)=>{
-    tr.querySelector('.code').value  = inv.rows[i]?.code  || '';
+  [...tbody.querySelectorAll('tr')].forEach((tr, i) => {
+    tr.querySelector('.code').value = inv.rows[i]?.code || '';
     tr.querySelector('.title').value = inv.rows[i]?.title || '';
     updateRow(tr);
   });
@@ -260,18 +300,18 @@ function loadInvoiceData(inv){
 }
 
 // ذخیره یا بروزرسانی بر اساس شماره فاکتور
-function saveCurrentInvoice(){
+function saveCurrentInvoice() {
   const data = collectInvoiceData();
-  if(!data.number){
-    if(!confirm('شماره فاکتور خالی است. با شناسه داخلی ذخیره شود؟')) return;
+  if (!data.number) {
+    if (!confirm('شماره فاکتور خالی است. با شناسه داخلی ذخیره شود؟')) return;
   }
   const list = getAllInvoices();
-  const idx = data.number ? list.findIndex(x => x.number === data.number) : -1;
-  if(idx >= 0){
-    data.id = list[idx].id;     // حفظ شناسه قبلی
-    list[idx] = data;           // بروزرسانی
-  }else{
-    list.unshift(data);         // افزودن جدید
+  const idx = data.number ? list.findIndex((x) => x.number === data.number) : -1;
+  if (idx >= 0) {
+    data.id = list[idx].id;
+    list[idx] = data;
+  } else {
+    list.unshift(data);
   }
   setAllInvoices(list);
   alert('فاکتور ذخیره شد ✅');
@@ -282,10 +322,10 @@ function saveCurrentInvoice(){
 const manager = document.getElementById('manager');
 const savedList = document.getElementById('savedList');
 
-function refreshSavedList(){
+function refreshSavedList() {
   const list = getAllInvoices();
   savedList.innerHTML = '';
-  list.forEach(inv => {
+  list.forEach((inv) => {
     const title = `${inv.number || 'بدون شماره'} — ${inv.customerName || 'بدون نام'} — ${inv.date || ''}`;
     const opt = new Option(title, inv.id);
     savedList.add(opt);
@@ -294,24 +334,25 @@ function refreshSavedList(){
 
 // رویدادهای مدیریت
 document.getElementById('saveInvoice').addEventListener('click', saveCurrentInvoice);
-document.getElementById('toggleManager').addEventListener('click', ()=>{
+document.getElementById('toggleManager').addEventListener('click', () => {
   manager.style.display = manager.style.display === 'none' ? 'block' : 'none';
   refreshSavedList();
 });
-document.getElementById('loadSelected').addEventListener('click', ()=>{
+document.getElementById('loadSelected').addEventListener('click', () => {
   const id = savedList.value;
-  const inv = getAllInvoices().find(x => x.id === id);
-  if(!inv) return alert('موردی انتخاب نشده');
+  const inv = getAllInvoices().find((x) => x.id === id);
+  if (!inv) return alert('موردی انتخاب نشده');
   loadInvoiceData(inv);
 });
-document.getElementById('deleteSelected').addEventListener('click', ()=>{
+document.getElementById('deleteSelected').addEventListener('click', () => {
   const id = savedList.value;
-  if(!id) return alert('موردی انتخاب نشده');
-  if(!confirm('این فاکتور حذف شود؟')) return;
-  const list = getAllInvoices().filter(x => x.id !== id);
+  if (!id) return alert('موردی انتخاب نشده');
+  if (!confirm('این فاکتور حذف شود؟')) return;
+  const list = getAllInvoices().filter((x) => x.id !== id);
   setAllInvoices(list);
   refreshSavedList();
 });
 </script>
+
 </body>
 </html>
