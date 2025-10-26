@@ -37,9 +37,7 @@
   .checkbox{transform:scale(1.1)}
   .muted{color:#6b7280;font-size:15px}
   .footer{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-top:1px dashed var(--line)}
-  tbody tr.selected {
-  background: #dbeafe !important; /* آبی روشن */
-}
+  tbody tr.selected { background: #dbeafe !important; }
 
   @media print{
     .actions,.footer .print-hint{display:none}
@@ -59,14 +57,11 @@
           <div class="muted" style="display:flex;align-items:center;justify-content:space-between;">
             <div>نیکــران موتور <br> بنلی - کی وی</div>
             <div style="display:flex;border:2px solid black;border-radius:8px;padding:10px;font-weight:800;">2601</div>
-            
           </div>
         </div>
         <div style="text-align: center;">
           <h1 style="font-weight: 800;">
-            
-            تعمیرگاه مجاز و خدمات پس از فروش </br>موتور سیکلت مرادیان 
-          
+            تعمیرگاه مجاز و خدمات پس از فروش </br>موتور سیکلت مرادیان
           </h1>
           <div style="font-size: 10px;" class="muted">آدرس: کرج ، جاده ملارد ، خیابان اهری ، نبش نسترن 58 ، روبرو ستاد فرماندهی </div>
         </div>
@@ -79,15 +74,12 @@
             <label style="flex: 2;">شماره فاکتور</label>
             <input style="flex: 4;" id="invNumber" type="text" placeholder="مثلاً 2601">
           </div>
-          </div>
         </div>
-        
       </header>
 
       <!-- اطلاعات فاکتور -->
       <div style="padding:14px 16px">
         <div class="meta">
-         
           <div class="row">
             <label>نام و نام خانوادگی مشتری</label>
             <input id="customerName" type="text" placeholder="نام مشتری">
@@ -120,25 +112,24 @@
 
         <div style="overflow:auto; border:1px solid var(--line); border-radius:12px; margin-top:10px">
           <table id="invoiceTable">
-  <thead>
-    <tr>
-      <th style="width:64px">ردیف</th>
-      <th>کد کالا</th>
-      <th>نام کالا</th>
-      <th style="width:110px">تعداد</th>
-      <th style="width:160px">قیمت واحد (ریال)</th>
-      <th style="width:180px">مبلغ کل (ریال)</th>
-    </tr>
-  </thead>
-  <tbody id="tbody"></tbody>
-  <tfoot>
-    <tr>
-      <td colspan="5" style="text-align:left;padding-left:16px">جمع کل</td>
-      <td><span id="grandTotal">0</span></td>
-    </tr>
-  </tfoot>
-</table>
-
+            <thead>
+              <tr>
+                <th style="width:64px">ردیف</th>
+                <th id="th-code">کد کالا</th>
+                <th>نام کالا</th>
+                <th style="width:110px">تعداد</th>
+                <th style="width:160px">قیمت واحد (ریال)</th>
+                <th style="width:180px">مبلغ کل (ریال)</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+            <tfoot>
+              <tr>
+                <td id="tfoot-label" colspan="5" style="text-align:left;padding-left:16px">جمع کل</td>
+                <td><span id="grandTotal">0</span></td>
+              </tr>
+            </tfoot>
+          </table>
         </div>
       </div>
 
@@ -150,6 +141,23 @@
   </div>
 
 <script>
+/* ===== تنظیم ساختار بر اساس انتخاب کاربر (با/بدون کد کالا) ===== */
+let includeCode = true; // پیش‌فرض
+
+function applyTableStructure() {
+  const thCode = document.getElementById('th-code');
+  const tfootLabel = document.getElementById('tfoot-label');
+
+  if (!includeCode) {
+    // حذف ستون "کد کالا" از هدِر
+    if (thCode) thCode.remove();
+    // تنظیم colspan جمع کل
+    if (tfootLabel) tfootLabel.setAttribute('colspan', '4');
+  } else {
+    if (tfootLabel) tfootLabel.setAttribute('colspan', '5');
+  }
+}
+
 /* ===== محاسبات و سطرها ===== */
 const nf = new Intl.NumberFormat('en-US');
 const tbody = document.getElementById('tbody');
@@ -158,15 +166,13 @@ const grandTotalEl = document.getElementById('grandTotal');
 function parseNum(str = '') {
   return Number(String(str).replace(/[, ]/g, '')) || 0;
 }
-function formatNum(n) {
-  return n ? nf.format(n) : '';
-}
+function formatNum(n) { return n ? nf.format(n) : ''; }
 
 function newRow(values = {}) {
   const tr = document.createElement('tr');
   tr.innerHTML = `
     <td class="rowIndex">1</td>
-    <td><input type="text" class="code" placeholder="کد"></td>
+    ${includeCode ? `<td><input type="text" class="code" placeholder="کد"></td>` : ``}
     <td><input type="text" class="title" placeholder="نام کالا/خدمت"></td>
     <td><input type="number" min="0" step="1" class="qty" value="${values.qty ?? 1}"></td>
     <td><input type="text" inputmode="numeric" class="price" value="${formatNum(values.price ?? 0)}"></td>
@@ -183,9 +189,10 @@ function newRow(values = {}) {
   });
   qtyInput.addEventListener('input', () => updateRow(tr));
 
-  // ✅ کلیک برای انتخاب/غیرفعال‌سازی سطر
-  tr.addEventListener('click', () => {
-    tr.classList.toggle('selected');
+  // انتخاب/غیرفعال‌سازی سطر با کلیک روی ردیف (نه روی اینپوت‌ها)
+  tr.addEventListener('click', (e) => {
+    const tag = e.target.tagName.toLowerCase();
+    if (tag === 'td') tr.classList.toggle('selected');
   });
 
   tbody.appendChild(tr);
@@ -211,33 +218,18 @@ function refreshRowIndices() {
   [...tbody.querySelectorAll('.rowIndex')].forEach((td, i) => (td.textContent = i + 1));
 }
 
+/* رویداد دکمه‌ها */
 document.getElementById('addRow').addEventListener('click', () => newRow());
 
 document.getElementById('removeRows').addEventListener('click', () => {
   const selected = [...tbody.querySelectorAll('tr.selected')];
-  if (!selected.length) {
-    alert('هیچ سطری انتخاب نشده است.');
-    return;
-  }
+  if (!selected.length) { alert('هیچ سطری انتخاب نشده است.'); return; }
   selected.forEach((tr) => tr.remove());
   refreshRowIndices();
   updateGrandTotal();
 });
 
-/* ===== استایل برای سطر انتخاب‌شده ===== */
-const style = document.createElement('style');
-style.textContent = `
-  tbody tr.selected {
-    background: #dbeafe !important; /* آبی روشن */
-  }
-`;
-document.head.appendChild(style);
-
-/* تاریخ پیش‌فرض و تقویم شمسی */
-(function setToday() {
-  const d = new Date();
-  document.getElementById('invDate').value = d.toISOString().slice(0, 10);
-})();
+/* تاریخ و تقویم شمسی */
 $(document).ready(function () {
   $('#invDate').persianDatepicker({
     format: 'YYYY/MM/DD',
@@ -246,42 +238,43 @@ $(document).ready(function () {
     calendar: { persian: { locale: 'fa', leapYearMode: 'algorithmic' } },
   });
 });
-newRow({ qty: 1, price: 0 });
 
-/* ===== ✅ ذخیره‌سازی در LocalStorage ===== */
+/* ===== ذخیره‌سازی در LocalStorage ===== */
 const STORAGE_KEY = 'invoices_v1';
 
 function getAllInvoices() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-  } catch {
-    return [];
-  }
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch { return []; }
 }
-function setAllInvoices(list) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-}
+function setAllInvoices(list) { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }
 
-// ساخت آبجکت فاکتور از فرم
 function collectInvoiceData() {
-  const rows = [...tbody.querySelectorAll('tr')].map((tr) => ({
-    code: tr.querySelector('.code')?.value || '',
-    title: tr.querySelector('.title')?.value || '',
-    qty: parseNum(tr.querySelector('.qty')?.value || '0'),
-    price: parseNum(tr.querySelector('.price')?.value || '0'),
-  }));
+  const rows = [...tbody.querySelectorAll('tr')].map((tr) => {
+    const item = {
+      title: tr.querySelector('.title')?.value || '',
+      qty: parseNum(tr.querySelector('.qty')?.value || '0'),
+      price: parseNum(tr.querySelector('.price')?.value || '0'),
+    };
+    if (includeCode) item.code = tr.querySelector('.code')?.value || '';
+    return item;
+  });
   return {
     id: (window.crypto?.randomUUID && crypto.randomUUID()) || String(Date.now()),
     date: document.getElementById('invDate').value,
     number: document.getElementById('invNumber').value.trim(),
     customerName: document.getElementById('customerName').value.trim(),
     customerPhone: document.getElementById('customerPhone').value.trim(),
+    includeCode, // ذخیره انتخاب کاربر داخل رکورد
     rows,
   };
 }
 
-// پر کردن فرم از یک فاکتور
 function loadInvoiceData(inv) {
+  // اگر فاکتور ذخیره‌شده ساختار متفاوتی داشته باشد، به ساختار آن احترام بگذار
+  includeCode = inv.includeCode !== undefined ? !!inv.includeCode : includeCode;
+  // بازچینی هدِر و فوتر براساس includeCode
+  applyTableStructure();
+
   document.getElementById('invDate').value = inv.date || '';
   document.getElementById('invNumber').value = inv.number || '';
   document.getElementById('customerName').value = inv.customerName || '';
@@ -292,14 +285,17 @@ function loadInvoiceData(inv) {
     newRow({ qty: r.qty, price: r.price });
   });
   [...tbody.querySelectorAll('tr')].forEach((tr, i) => {
-    tr.querySelector('.code').value = inv.rows[i]?.code || '';
+    if (includeCode) {
+      const codeEl = tr.querySelector('.code');
+      if (codeEl) codeEl.value = inv.rows[i]?.code || '';
+    }
     tr.querySelector('.title').value = inv.rows[i]?.title || '';
     updateRow(tr);
   });
   updateGrandTotal();
 }
 
-// ذخیره یا بروزرسانی بر اساس شماره فاکتور
+/* ذخیره یا بروزرسانی بر اساس شماره فاکتور */
 function saveCurrentInvoice() {
   const data = collectInvoiceData();
   if (!data.number) {
@@ -318,7 +314,7 @@ function saveCurrentInvoice() {
   refreshSavedList();
 }
 
-// لیست فاکتورها در سلکت
+/* پنل مدیریت */
 const manager = document.getElementById('manager');
 const savedList = document.getElementById('savedList');
 
@@ -326,13 +322,12 @@ function refreshSavedList() {
   const list = getAllInvoices();
   savedList.innerHTML = '';
   list.forEach((inv) => {
-    const title = `${inv.number || 'بدون شماره'} — ${inv.customerName || 'بدون نام'} — ${inv.date || ''}`;
+    const title = `${inv.number || 'بدون شماره'} — ${inv.customerName || 'بدون نام'} — ${inv.date || ''} ${inv.includeCode === false ? '— بدون کد' : ''}`;
     const opt = new Option(title, inv.id);
     savedList.add(opt);
   });
 }
 
-// رویدادهای مدیریت
 document.getElementById('saveInvoice').addEventListener('click', saveCurrentInvoice);
 document.getElementById('toggleManager').addEventListener('click', () => {
   manager.style.display = manager.style.display === 'none' ? 'block' : 'none';
@@ -352,6 +347,15 @@ document.getElementById('deleteSelected').addEventListener('click', () => {
   setAllInvoices(list);
   refreshSavedList();
 });
+
+/* ===== آغاز: پرسش از کاربر و ساخت اولین سطر ===== */
+(function init() {
+  // سؤال: «آیا می‌خواهید فاکتور با کد کالا باشد؟»
+  includeCode = confirm('آیا می‌خواهید فاکتور «با کد کالا» باشد؟\nبرای «بدون کد کالا» روی لغو/Cancel بزنید.');
+  applyTableStructure();
+  // ساخت یک سطر اولیه
+  newRow({ qty: 1, price: 0 });
+})();
 </script>
 
 </body>
